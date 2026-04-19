@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rizal Eka — My Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#050810;--bg2:#0a0e1a;--bg3:#0f1525;
+  --card:#111827;--card-h:#161d30;
+  --blue:#0096FF;--blue-s:#3cb4ff;
+  --white:#fff;--text:#e8eaf0;--muted:#7b8299;--dim:#3a4055;
+  --border:rgba(255,255,255,0.07);--border-b:rgba(0,150,255,0.3);
+}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;
+  background:rgba(5,8,16,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{display:flex;flex-direction:column;gap:0}
+.nav-name{font-size:1rem;font-weight:700;color:var(--white);letter-spacing:0.02em}
+.nav-sub{font-size:0.62rem;font-weight:500;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase}
+.btn-add{
+  background:var(--blue);color:#fff;
+  font-size:0.78rem;font-weight:700;letter-spacing:0.04em;
+  padding:0.45rem 1.1rem;border-radius:50px;
+  border:none;cursor:pointer;transition:opacity .2s;
+}
+.btn-add:hover{opacity:.85}
+
+/* HERO */
+.hero{
+  margin-top:58px;height:320px;
+  position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;padding:2rem 2.5rem;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 90% at 60% 0%,rgba(0,150,255,.1) 0%,transparent 60%),
+    linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
+}
+.hero-lines{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,150,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,150,255,.04) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.hero-content{position:relative;z-index:1}
+.hero-label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+.hero-title{font-size:clamp(1.8rem,4.5vw,3rem);font-weight:700;color:var(--white);line-height:1.1;margin-bottom:1.4rem}
+.hero-title span{color:var(--blue)}
+.hero-stats{display:flex;gap:2.5rem}
+.hs-num{font-size:1.7rem;font-weight:700;color:var(--white);line-height:1}
+.hs-lbl{font-size:.68rem;color:var(--muted);margin-top:.15rem;text-transform:uppercase;letter-spacing:.06em}
+
+/* SECTION */
+.section{padding:2rem 2.5rem 3rem}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem}
+.sec-title{font-size:.9rem;font-weight:600;color:var(--white);letter-spacing:.04em}
+
+/* GRID */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.game-card{
+  background:var(--card);border-radius:14px;overflow:hidden;
+  cursor:pointer;border:1px solid var(--border);
+  transition:transform .25s,box-shadow .25s,background .2s;
+  position:relative;
+}
+.game-card:hover{
+  transform:translateY(-5px) scale(1.02);background:var(--card-h);
+  box-shadow:0 20px 40px rgba(0,0,0,.5),0 0 0 1px var(--border-b);
+}
+.card-cover{
+  width:100%;aspect-ratio:3/4;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.card-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.card-cover-ph{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;
+  background:linear-gradient(135deg,var(--bg2),var(--bg3));
+}
+.card-ph-icon{
+  width:50px;height:50px;border-radius:12px;
+  background:rgba(0,150,255,.1);border:1px solid var(--border-b);
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+}
+.card-ph-name{font-size:.7rem;color:var(--dim);text-align:center;padding:0 .8rem;line-height:1.4}
+.dot{
+  position:absolute;top:9px;right:9px;
+  width:8px;height:8px;border-radius:50%;
+}
+.dot.finished{background:#3cc875;box-shadow:0 0 8px #3cc875}
+.dot.playing{background:var(--blue);box-shadow:0 0 8px var(--blue);animation:blink 2s infinite}
+.dot.dropped{background:#ff4a4a}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.score-b{
+  position:absolute;bottom:9px;left:9px;
+  background:rgba(5,8,16,.88);backdrop-filter:blur(8px);
+  border:1px solid var(--border-b);border-radius:6px;
+  padding:.2rem .5rem;font-size:.78rem;font-weight:700;color:var(--blue-s);
+}
+.card-info{padding:.85rem}
+.card-title{font-size:.88rem;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.2rem}
+.card-meta{font-size:.72rem;color:var(--muted);display:flex;justify-content:space-between}
+.card-plat{font-size:.65rem;font-weight:700;color:var(--blue)}
+
+/* EMPTY */
+.empty{grid-column:1/-1;text-align:center;padding:3rem;color:var(--dim)}
+.empty-icon{font-size:2.5rem;margin-bottom:.5rem;opacity:.4}
+.empty-txt{font-size:.85rem}
+
+/* GALLERY */
+.gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.gal-item{
+  aspect-ratio:16/9;border-radius:10px;background:var(--card);
+  border:1px solid var(--border);overflow:hidden;cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+}
+.gal-item:hover{transform:scale(1.02);box-shadow:0 0 0 1px var(--border-b)}
+.gal-item img{width:100%;height:100%;object-fit:cover;display:block}
+.gal-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;color:var(--dim);font-size:.72rem}
+.gal-ph-icon{font-size:1.4rem;opacity:.35}
+
+/* ─── PS5 DETAIL OVERLAY ─── */
+.ps5-overlay{
+  position:fixed;inset:0;z-index:200;
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease;
+}
+.ps5-overlay.open{opacity:1;pointer-events:all}
+
+.ps5-bg{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  filter:blur(0px);
+  transition:background-image .4s;
+}
+.ps5-bg-tint{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    90deg,
+    rgba(5,8,16,.97) 0%,
+    rgba(5,8,16,.88) 35%,
+    rgba(5,8,16,.6) 65%,
+    rgba(5,8,16,.3) 100%
+  );
+}
+.ps5-bg-bottom{
+  position:absolute;bottom:0;left:0;right:0;height:35%;
+  background:linear-gradient(to top,rgba(5,8,16,1) 0%,transparent 100%);
+}
+
+.ps5-content{
+  position:relative;z-index:1;
+  height:100%;display:flex;flex-direction:column;justify-content:center;
+  padding:0 5vw;
+  max-width:600px;
+}
+.ps5-back{
+  position:absolute;top:1.5rem;left:2.5rem;
+  display:flex;align-items:center;gap:.5rem;
+  color:var(--muted);font-size:.78rem;font-weight:500;
+  cursor:pointer;border:none;background:none;
+  transition:color .2s;padding:.4rem .7rem;
+  border-radius:50px;
+}
+.ps5-back:hover{color:var(--white);background:rgba(255,255,255,.07)}
+.ps5-back-arrow{font-size:1rem}
+
+.ps5-platform{
+  font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:.8rem;
+}
+.ps5-title{
+  font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:var(--white);
+  line-height:1.05;margin-bottom:1.5rem;
+}
+.ps5-review{
+  font-size:.9rem;color:rgba(232,234,240,.7);
+  line-height:1.8;max-width:480px;margin-bottom:2rem;
+}
+
+.ps5-actions{display:flex;flex-direction:column;gap:.7rem;margin-bottom:2rem}
+.ps5-btn{
+  display:flex;align-items:center;gap:.9rem;
+  padding:.75rem 1.4rem;border-radius:10px;
+  font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;
+  cursor:pointer;border:none;width:fit-content;min-width:200px;
+  transition:all .2s;
+}
+.ps5-btn-primary{background:var(--white);color:#0a0e1a}
+.ps5-btn-primary:hover{background:#d0e8ff;transform:translateX(3px)}
+.ps5-btn-secondary{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.15)}
+.ps5-btn-secondary:hover{background:rgba(255,255,255,.16);transform:translateX(3px)}
+.ps5-btn-danger{background:rgba(255,74,74,.12);color:#ff6b6b;border:1px solid rgba(255,74,74,.2)}
+.ps5-btn-danger:hover{background:rgba(255,74,74,.22);transform:translateX(3px)}
+.ps5-btn-icon{font-size:1rem;width:20px;text-align:center}
+
+.ps5-meta{
+  display:flex;gap:2rem;
+  border-top:1px solid rgba(255,255,255,.08);
+  padding-top:1.2rem;
+}
+.ps5-meta-item label{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.2rem}
+.ps5-meta-item span{font-size:.92rem;font-weight:600;color:var(--white)}
+
+.ps5-status-pill{
+  display:inline-block;padding:.25rem .8rem;border-radius:50px;
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;
+}
+.ps5-status-pill.finished{background:rgba(60,200,117,.15);color:#3cc875}
+.ps5-status-pill.playing{background:rgba(0,150,255,.15);color:var(--blue-s)}
+.ps5-status-pill.dropped{background:rgba(255,74,74,.15);color:#ff4a4a}
+
+.ps5-art{
+  position:absolute;right:0;top:0;bottom:0;width:50%;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.ps5-art img{
+  max-height:80vh;max-width:100%;object-fit:contain;
+  border-radius:16px;
+  box-shadow:-40px 0 80px rgba(0,0,0,.6);
+  opacity:.95;
+}
+.ps5-art-ph{
+  width:240px;height:320px;border-radius:16px;
+  background:linear-gradient(135deg,var(--bg2),var(--bg3));
+  border:1px solid var(--border-b);
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;opacity:.4;
+  box-shadow:-40px 0 80px rgba(0,0,0,.6);
+}
+
+/* ADD MODAL */
+.overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(5,8,16,.9);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--bg2);border:1px solid rgba(0,150,255,.2);
+  border-radius:20px;padding:2rem;
+  width:440px;max-width:92vw;max-height:88vh;overflow-y:auto;
+  transform:translateY(24px);transition:transform .25s;
+}
+.overlay.open .modal{transform:translateY(0)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.modal-ttl{font-size:1.05rem;font-weight:700;color:var(--white)}
+.modal-x{
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.06);border:none;
+  color:var(--muted);font-size:.95rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .2s;
+}
+.modal-x:hover{background:rgba(255,255,255,.12);color:var(--white)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.fg{margin-bottom:.9rem}
+.flabel{display:block;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.35rem}
+.finput{
+  width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:.65rem .9rem;color:var(--text);
+  font-family:'Outfit',sans-serif;font-size:.85rem;
+  outline:none;transition:border-color .2s;resize:vertical;
+}
+.finput:focus{border-color:var(--blue)}
+.finput option{background:var(--bg2)}
+
+/* IMAGE UPLOAD */
+.upload-area{
+  width:100%;border:1.5px dashed var(--border-b);border-radius:12px;
+  padding:1.2rem;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;background:var(--bg3);
+  position:relative;
+}
+.upload-area:hover{border-color:var(--blue-s);background:rgba(0,150,255,.05)}
+.upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-preview{
+  width:100%;aspect-ratio:3/4;border-radius:10px;
+  object-fit:cover;display:block;margin-bottom:.6rem;
+}
+.upload-icon{font-size:1.6rem;margin-bottom:.3rem;opacity:.5}
+.upload-txt{font-size:.75rem;color:var(--muted)}
+.upload-hint{font-size:.65rem;color:var(--dim);margin-top:.2rem}
+
+.fsave{
+  width:100%;background:var(--blue);color:#fff;
+  border:none;border-radius:10px;padding:.82rem;
+  font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;
+  cursor:pointer;transition:opacity .2s,transform .15s;margin-top:.4rem;
+}
+.fsave:hover{opacity:.88;transform:translateY(-1px)}
+
+footer{text-align:center;padding:2rem;font-size:.72rem;color:var(--dim);border-top:1px solid var(--border)}
+
+@media(max-width:640px){
+  nav{padding:0 1rem}
+  .section{padding:1.5rem 1rem 2rem}
+  .hero{padding:1.5rem}
+  .hero-stats{gap:1.5rem}
+  .frow{grid-template-columns:1fr}
+  .ps5-content{padding:0 1.5rem;max-width:100%}
+  .ps5-art{display:none}
+  .ps5-title{font-size:2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <span class="nav-name">Rizal Eka</span>
+    <span class="nav-sub">My Collection</span>
+  </div>
+  <button class="btn-add" onclick="openAdd()">+ Tambah Game</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-content">
+    <p class="hero-label">My Collection</p>
+    <h1 class="hero-title">Game<br><span>Library</span></h1>
+    <div class="hero-stats">
+      <div><div class="hs-num" id="s-total">0</div><div class="hs-lbl">Total</div></div>
+      <div><div class="hs-num" id="s-done">0</div><div class="hs-lbl">Tamat</div></div>
+      <div><div class="hs-num" id="s-play">0</div><div class="hs-lbl">Main</div></div>
+      <div><div class="hs-num" id="s-avg">—</div><div class="hs-lbl">Avg Skor</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARY -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-title">Semua Game</span>
+  </div>
+  <div class="games-grid" id="grid"></div>
+</div>
+
+<!-- GALLERY -->
+<div class="section" style="background:var(--bg2)">
+  <div class="sec-head"><span class="sec-title">Galeri Screenshot</span></div>
+  <div class="gal-grid">
+    <div class="gal-item"><div class="gal-ph"><div class="gal-ph-icon">🖼</div>Tambah screenshot</div></div>
+    <div class="gal-item"><div class="gal-ph"><div class="gal-ph-icon">🖼</div>Tambah screenshot</div></div>
+    <div class="gal-item"><div class="gal-ph"><div class="gal-ph-icon">🖼</div>Tambah screenshot</div></div>
+    <div class="gal-item"><div class="gal-ph"><div class="gal-ph-icon">🖼</div>Tambah screenshot</div></div>
+    <div class="gal-item"><div class="gal-ph"><div class="gal-ph-icon">🖼</div>Tambah screenshot</div></div>
+    <div class="gal-item"><div class="gal-ph"><div class="gal-ph-icon">🖼</div>Tambah screenshot</div></div>
+  </div>
+</div>
+
+<footer>Rizal Eka — My Game Collection</footer>
+
+<!-- ─── PS5 DETAIL VIEW ─── -->
+<div class="ps5-overlay" id="ps5">
+  <div class="ps5-bg" id="ps5-bg"></div>
+  <div class="ps5-bg-tint"></div>
+  <div class="ps5-bg-bottom"></div>
+
+  <button class="ps5-back" onclick="closePS5()">
+    <span class="ps5-back-arrow">←</span> Kembali
+  </button>
+
+  <div class="ps5-content">
+    <div class="ps5-platform" id="ps5-plat">PS5</div>
+    <h2 class="ps5-title" id="ps5-title">Game Title</h2>
+    <p class="ps5-review" id="ps5-review">Review game...</p>
+
+    <div class="ps5-actions">
+      <button class="ps5-btn ps5-btn-primary" onclick="closePS5()">
+        <span class="ps5-btn-icon">▶</span> Lanjutkan Main
+      </button>
+      <button class="ps5-btn ps5-btn-secondary" id="ps5-status-btn">
+        <span class="ps5-btn-icon">✓</span> Tandai Tamat
+      </button>
+      <button class="ps5-btn ps5-btn-danger" onclick="deleteGame()">
+        <span class="ps5-btn-icon">🗑</span> Hapus dari Library
+      </button>
+    </div>
+
+    <div class="ps5-meta">
+      <div class="ps5-meta-item">
+        <label>Skor</label>
+        <span id="ps5-score">—</span>
+      </div>
+      <div class="ps5-meta-item">
+        <label>Platform</label>
+        <span id="ps5-plat2">—</span>
+      </div>
+      <div class="ps5-meta-item">
+        <label>Status</label>
+        <span id="ps5-status-label">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ps5-art" id="ps5-art">
+    <div class="ps5-art-ph" id="ps5-art-ph">🎮</div>
+  </div>
+</div>
+
+<!-- ─── ADD MODAL ─── -->
+<div class="overlay" id="add-overlay" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-ttl">Tambah Game Baru</span>
+      <button class="modal-x" onclick="closeAdd()">✕</button>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="fg">
+      <label class="flabel">Cover Game</label>
+      <div class="upload-area" id="upload-area">
+        <input type="file" id="img-input" accept="image/*" onchange="previewImage(event)">
+        <img id="img-preview" class="upload-preview" style="display:none">
+        <div id="upload-placeholder">
+          <div class="upload-icon">🖼</div>
+          <div class="upload-txt">Klik untuk upload gambar cover</div>
+          <div class="upload-hint">JPG, PNG, WEBP — maks 5MB</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fg"><label class="flabel">Nama Game *</label><input id="i-title" class="finput" placeholder="cth: Elden Ring"></div>
+
+    <div class="frow">
+      <div class="fg">
+        <label class="flabel">Platform</label>
+        <select id="i-platform" class="finput">
+          <option>PC</option><option>PS5</option><option>PS4</option><option>PS3</option>
+          <option>Xbox</option><option>Switch</option><option>Mobile</option>
+        </select>
+      </div>
+      <div class="fg"><label class="flabel">Skor (1–10)</label><input id="i-score" class="finput" type="number" min="1" max="10" step="0.5" placeholder="8.5"></div>
+    </div>
+
+    <div class="fg">
+      <label class="flabel">Status</label>
+      <select id="i-status" class="finput">
+        <option value="finished">Tamat</option>
+        <option value="playing">Sedang Main</option>
+        <option value="dropped">Berhenti</option>
+      </select>
+    </div>
+
+    <div class="fg"><label class="flabel">Review</label><textarea id="i-review" class="finput" rows="3" placeholder="Ceritakan pengalamanmu..."></textarea></div>
+
+    <button class="fsave" onclick="addGame()">Simpan ke Library</button>
+  </div>
+</div>
+
+<script>
+const KEY = 'rz_gl3';
+const ICONS = { action:'⚔️',rpg:'🗡️',jrpg:'✨',fps:'🔫',horror:'👻',racing:'🏎️',puzzle:'🧩',adventure:'🗺️',platformer:'🕹️',survival:'🏕️',simulation:'🏙️',fighting:'🥊',strategy:'♟️',sports:'⚽' };
+const STATUS_LBL = { finished:'Tamat', playing:'Sedang Main', dropped:'Berhenti' };
+
+function icon(g='') { for(const[k,v] of Object.entries(ICONS)) if(g.toLowerCase().includes(k)) return v; return '🎮'; }
+function load() { try { return JSON.parse(localStorage.getItem(KEY)) || defaults(); } catch { return defaults(); } }
+function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(e) { console.warn('Storage full, saving without images'); } }
+
+function defaults() {
+  return [
+    { id:1, title:'Hollow Knight', platform:'PC', score:9.5, status:'finished', review:'Masterpiece indie. Dunia bawah tanah yang luar biasa detail dan boss fight memuaskan banget.', img:null },
+    { id:2, title:'Persona 5 Royal', platform:'PS4', score:9.0, status:'finished', review:'100+ jam yang nggak terasa. Stylish, cerita kuat, karakter memorable.', img:null },
+    { id:3, title:'Game Terbaru', platform:'PS5', score:8.0, status:'playing', review:'Masih dalam proses. Sejauh ini seru dan visual sangat memukau!', img:null }
+  ];
+}
+
+// ─ RENDER ─
+function render() {
+  const data = load();
+  const done = data.filter(g=>g.status==='finished').length;
+  const play = data.filter(g=>g.status==='playing').length;
+  const sc = data.filter(g=>g.score).map(g=>g.score);
+
+  document.getElementById('s-total').textContent = data.length;
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-play').textContent = play;
+  document.getElementById('s-avg').textContent = sc.length ? (sc.reduce((a,b)=>a+b)/sc.length).toFixed(1) : '—';
+
+  const grid = document.getElementById('grid');
+  if (!data.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">🎮</div><div class="empty-txt">Belum ada game. Klik "+ Tambah Game"!</div></div>';
+    return;
+  }
+  grid.innerHTML = data.map(g => `
+    <div class="game-card" onclick="openPS5(${g.id})">
+      <div class="card-cover">
+        ${g.img
+          ? `<img src="${g.img}" alt="${g.title}">`
+          : `<div class="card-cover-ph"><div class="card-ph-icon">${icon(g.title)}</div><div class="card-ph-name">${g.title}</div></div>`
+        }
+        <span class="dot ${g.status}"></span>
+        ${g.score ? `<span class="score-b">${g.score}</span>` : ''}
+      </div>
+      <div class="card-info">
+        <div class="card-title">${g.title}</div>
+        <div class="card-meta"><span>${STATUS_LBL[g.status]||g.status}</span><span class="card-plat">${g.platform}</span></div>
+      </div>
+    </div>`).join('');
+}
+
+// ─ PS5 DETAIL ─
+let activeId = null;
+
+function openPS5(id) {
+  const data = load();
+  const g = data.find(x=>x.id===id);
+  if (!g) return;
+  activeId = id;
+
+  document.getElementById('ps5-title').textContent = g.title;
+  document.getElementById('ps5-plat').textContent = g.platform;
+  document.getElementById('ps5-plat2').textContent = g.platform;
+  document.getElementById('ps5-review').textContent = g.review || 'Belum ada review.';
+  document.getElementById('ps5-score').textContent = g.score ? `${g.score} / 10` : '—';
+
+  const statusEl = document.getElementById('ps5-status-label');
+  statusEl.innerHTML = `<span class="ps5-status-pill ${g.status}">${STATUS_LBL[g.status]||g.status}</span>`;
+
+  // Status toggle button
+  const sbtn = document.getElementById('ps5-status-btn');
+  if (g.status === 'finished') {
+    sbtn.innerHTML = '<span class="ps5-btn-icon">▷</span> Tandai Sedang Main';
+    sbtn.onclick = () => toggleStatus(id, 'playing');
+  } else {
+    sbtn.innerHTML = '<span class="ps5-btn-icon">✓</span> Tandai Tamat';
+    sbtn.onclick = () => toggleStatus(id, 'finished');
+  }
+
+  // Art
+  const artEl = document.getElementById('ps5-art');
+  const phEl = document.getElementById('ps5-art-ph');
+  if (g.img) {
+    artEl.innerHTML = `<img src="${g.img}" alt="${g.title}">`;
+    document.getElementById('ps5-bg').style.backgroundImage = `url('${g.img}')`;
+    document.getElementById('ps5-bg').style.filter = 'blur(40px) brightness(.4)';
+  } else {
+    artEl.innerHTML = `<div class="ps5-art-ph">${icon(g.title)}</div>`;
+    document.getElementById('ps5-bg').style.backgroundImage = 'none';
+    document.getElementById('ps5-bg').style.filter = 'none';
+  }
+
+  document.getElementById('ps5').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePS5() {
+  document.getElementById('ps5').classList.remove('open');
+  document.body.style.overflow = '';
+  activeId = null;
+}
+
+function toggleStatus(id, newStatus) {
+  const data = load();
+  const g = data.find(x=>x.id===id);
+  if (g) { g.status = newStatus; save(data); render(); openPS5(id); }
+}
+
+function deleteGame() {
+  if (!activeId) return;
+  if (!confirm('Hapus game ini dari library?')) return;
+  const data = load().filter(g=>g.id!==activeId);
+  save(data); render(); closePS5();
+}
+
+// ─ ADD GAME ─
+let uploadedImg = null;
+
+function previewImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    uploadedImg = ev.target.result;
+    const prev = document.getElementById('img-preview');
+    prev.src = uploadedImg;
+    prev.style.display = 'block';
+    document.getElementById('upload-placeholder').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function openAdd() {
+  document.getElementById('add-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAdd() {
+  document.getElementById('add-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function bgClose(e) { if(e.target===document.getElementById('add-overlay')) closeAdd(); }
+
+function addGame() {
+  const t = document.getElementById('i-title').value.trim();
+  if (!t) { alert('Nama game harus diisi!'); return; }
+  const data = load();
+  data.unshift({
+    id: Date.now(),
+    title: t,
+    platform: document.getElementById('i-platform').value,
+    score: parseFloat(document.getElementById('i-score').value) || null,
+    status: document.getElementById('i-status').value,
+    review: document.getElementById('i-review').value || '',
+    img: uploadedImg
+  });
+  try { save(data); }
+  catch(e) {
+    // If too large (base64 images), save without images
+    const slim = data.map(g=>({...g, img: g.id===data[0].id ? null : g.img}));
+    save(slim);
+    alert('Cover tidak tersimpan karena ukuran terlalu besar. Coba gambar yang lebih kecil.');
+  }
+  render(); closeAdd();
+  ['i-title','i-score','i-review'].forEach(id=>document.getElementById(id).value='');
+  uploadedImg = null;
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('upload-placeholder').style.display = 'block';
+  document.getElementById('img-input').value = '';
+}
+
+// ESC to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closePS5(); closeAdd(); }
+});
+
+render();
+</script>
+</body>
+</html>
