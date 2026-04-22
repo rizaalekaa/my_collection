@@ -197,6 +197,7 @@ footer{text-align:center;padding:2rem;font-size:.72rem;color:var(--dim);border-t
       <div><div class="hs-num" id="s-done">0</div><div class="hs-lbl">Tamat</div></div>
       <div><div class="hs-num" id="s-play">0</div><div class="hs-lbl">Main</div></div>
       <div><div class="hs-num" id="s-avg">—</div><div class="hs-lbl">Avg Skor</div></div>
+      <div><div class="hs-num" id="s-hours">0</div><div class="hs-lbl">Total Jam</div></div>
     </div>
   </div>
 </div>
@@ -218,7 +219,6 @@ footer{text-align:center;padding:2rem;font-size:.72rem;color:var(--dim);border-t
 
     <div class="ps5-topbar">
       <button class="ps5-back" onclick="closePS5()">← Kembali</button>
-      <button class="ps5-edit-btn" onclick="openEdit()">✏️ Edit</button>
     </div>
 
     <div class="ps5-main">
@@ -232,6 +232,9 @@ footer{text-align:center;padding:2rem;font-size:.72rem;color:var(--dim);border-t
             <span class="ps5-btn-icon">▶</span> Lanjutkan Main
           </button>
           <button class="ps5-btn ps5-btn-secondary" id="ps5-toggle-btn"></button>
+          <button class="ps5-btn ps5-btn-secondary" onclick="openEdit()">
+            <span class="ps5-btn-icon">✏️</span> Edit Info Game
+          </button>
           <button class="ps5-btn ps5-btn-danger" onclick="deleteGame()">
             <span class="ps5-btn-icon">🗑</span> Hapus dari Library
           </button>
@@ -393,10 +396,12 @@ function render(){
   const done=data.filter(g=>g.status==='finished').length;
   const play=data.filter(g=>g.status==='playing').length;
   const sc=data.filter(g=>g.score).map(g=>g.score);
+  const totalHours=data.reduce((sum,g)=>sum+(g.playtime||0),0);
   document.getElementById('s-total').textContent=data.length;
   document.getElementById('s-done').textContent=done;
   document.getElementById('s-play').textContent=play;
   document.getElementById('s-avg').textContent=sc.length?(sc.reduce((a,b)=>a+b)/sc.length).toFixed(1):'—';
+  document.getElementById('s-hours').textContent=totalHours;
 
   const grid=document.getElementById('grid');
   if(!data.length){
